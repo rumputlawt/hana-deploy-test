@@ -2,12 +2,27 @@ import tweetnacl from "tweetnacl";
 import { decodeHex } from "@std/encoding/hex";
 import { STATUS_CODE } from "@std/http/status";
 import {
+	type APIChatInputApplicationCommandInteraction,
 	type APIInteraction,
+	APIMessageApplicationCommandInteraction,
+	APIUserApplicationCommandInteraction,
 	InteractionResponseType,
 	InteractionType,
 } from "@discordjs/core";
 import { define } from "~/utils/core.ts";
-import { HttpError } from "fresh";
+import { HttpError, type RouteConfig } from "fresh";
+import {
+	CommandResponse,
+	isMessageContextMenuCommand,
+	isSlashCommand,
+	isUserContextMenuCommand,
+	loadCommands,
+} from "~/utils/command.ts";
+import { replyInteraction } from "~/utils/interaction.ts";
+
+export const config: RouteConfig = {
+	skipAppWrapper: true,
+};
 
 export const handler = define.handlers({
 	async POST(ctx) {
@@ -42,6 +57,35 @@ export const handler = define.handlers({
 						return Response.json({
 							type: InteractionResponseType.Pong,
 						});
+					}
+					case InteractionType.ApplicationCommand: {
+						const commands = await loadCommands(ctx.config.mode);
+						const command = commands.find((command) =>
+							command.data.name === interaction.data.name &&
+							command.data.type === interaction.data.type
+						);
+
+						let response: CommandResponse = replyInteraction({
+							content: "command not found??",
+						});
+
+						if (command) {
+							if (isSlashCommand(command)) {
+								response = await command.execute(
+									interaction as APIChatInputApplicationCommandInteraction,
+								);
+							} else if (isMessageContextMenuCommand(command)) {
+								response = await command.execute(
+									interaction as APIMessageApplicationCommandInteraction,
+								);
+							} else if (isUserContextMenuCommand(command)) {
+								response = await command.execute(
+									interaction as APIUserApplicationCommandInteraction,
+								);
+							}
+						}
+
+						return Response.json(response);
 					}
 					default: {
 						return new Response(null, {

@@ -1,7 +1,7 @@
 {
 	"tasks": {
 		"check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-		"dev": "deno run -A --env --watch=static/,routes/ dev.ts",
+		"dev": "deno run -A --env --watch=static/,routes/,commands/ dev.ts",
 		"build": "deno run -A dev.ts build",
 		"start": "deno run -A --env main.ts",
 		"update": "deno run -A -r jsr:@fresh/update ."
@@ -23,7 +23,9 @@
 	],
 	"imports": {
 		"@discordjs/core": "npm:@discordjs/core@^2.0.0/http-only",
+		"@discordjs/rest": "npm:@discordjs/rest@^2.4.0",
 		"@std/encoding": "jsr:@std/encoding@^1.0.6",
+		"@std/fs": "jsr:@std/fs@^1.0.7",
 		"@std/http": "jsr:@std/http@^1.0.12",
 		"tweetnacl": "npm:tweetnacl@^1.0.3",
 		"~/": "./",
