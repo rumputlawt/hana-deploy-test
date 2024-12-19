@@ -1,10 +1,10 @@
 import {
 	type APIApplicationCommandInteraction,
 	type APIChatInputApplicationCommandInteraction,
-	APIInteractionResponseChannelMessageWithSource,
-	APIInteractionResponseDeferredChannelMessageWithSource,
+	type APIInteractionResponseChannelMessageWithSource,
+	type APIInteractionResponseDeferredChannelMessageWithSource,
 	type APIMessageApplicationCommandInteraction,
-	APIModalInteractionResponse,
+	type APIModalInteractionResponse,
 	type APIUserApplicationCommandInteraction,
 	ApplicationCommandType,
 	type RESTPostAPIApplicationCommandsJSONBody,
