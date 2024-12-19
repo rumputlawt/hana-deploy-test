@@ -1,7 +1,10 @@
 import {
 	type APIApplicationCommandInteraction,
 	type APIChatInputApplicationCommandInteraction,
+	APIInteractionResponseChannelMessageWithSource,
+	APIInteractionResponseDeferredChannelMessageWithSource,
 	type APIMessageApplicationCommandInteraction,
+	APIModalInteractionResponse,
 	type APIUserApplicationCommandInteraction,
 	ApplicationCommandType,
 	type RESTPostAPIApplicationCommandsJSONBody,
@@ -9,35 +12,42 @@ import {
 	type RESTPostAPIContextMenuApplicationCommandsJSONBody,
 } from "@discordjs/core";
 
-export function slashCommand(command: Omit<SlashCommand, "type">) {
+export function slashCommand(
+	command: Omit<SlashCommand, "type">,
+): SlashCommand {
 	return {
 		data: { ...command.data, type: ApplicationCommandType.ChatInput },
 		execute: command.execute,
-	} satisfies SlashCommand;
+	};
 }
 export function messageContextMenuCommand(
 	command: Omit<MessageContextMenuCommand, "type">,
-) {
+): MessageContextMenuCommand {
 	return {
 		data: { ...command.data, type: ApplicationCommandType.Message },
 		execute: command.execute,
-	} satisfies MessageContextMenuCommand;
+	};
 }
 export function userContextMenuCommand(
 	command: Omit<UserContextMenuCommand, "type">,
-) {
+): UserContextMenuCommand {
 	return {
 		data: { ...command.data, type: ApplicationCommandType.User },
 		execute: command.execute,
-	} satisfies UserContextMenuCommand;
+	};
 }
+
+type CommandResponse =
+	| APIInteractionResponseChannelMessageWithSource
+	| APIInteractionResponseDeferredChannelMessageWithSource
+	| APIModalInteractionResponse;
 
 interface BaseCommand<
 	Data extends RESTPostAPIApplicationCommandsJSONBody,
 	Interaction extends APIApplicationCommandInteraction,
 > {
 	data: Data;
-	execute: (interaction: Interaction) => void;
+	execute: (interaction: Interaction) => CommandResponse;
 }
 
 export type SlashCommand = BaseCommand<
