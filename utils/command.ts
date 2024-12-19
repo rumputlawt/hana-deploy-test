@@ -13,7 +13,9 @@ import {
 } from "@discordjs/core";
 
 export function slashCommand(
-	command: Omit<SlashCommand, "type">,
+	command: Omit<SlashCommand, "data"> & {
+		data: Omit<RESTPostAPIChatInputApplicationCommandsJSONBody, "type">;
+	},
 ): SlashCommand {
 	return {
 		data: { ...command.data, type: ApplicationCommandType.ChatInput },
@@ -21,7 +23,9 @@ export function slashCommand(
 	};
 }
 export function messageContextMenuCommand(
-	command: Omit<MessageContextMenuCommand, "type">,
+	command: Omit<MessageContextMenuCommand, "data"> & {
+		data: Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, "type">;
+	},
 ): MessageContextMenuCommand {
 	return {
 		data: { ...command.data, type: ApplicationCommandType.Message },
@@ -29,7 +33,9 @@ export function messageContextMenuCommand(
 	};
 }
 export function userContextMenuCommand(
-	command: Omit<UserContextMenuCommand, "type">,
+	command: Omit<UserContextMenuCommand, "data"> & {
+		data: Omit<RESTPostAPIContextMenuApplicationCommandsJSONBody, "type">;
+	},
 ): UserContextMenuCommand {
 	return {
 		data: { ...command.data, type: ApplicationCommandType.User },
