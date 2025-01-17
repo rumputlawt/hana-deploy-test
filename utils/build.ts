@@ -12,7 +12,9 @@ export async function build(mode: Mode) {
 
 	const manifest = `
     ${
-		commandFiles.map((ctx, id) => `import $${id} from "~/${ctx.path}";`)
+		commandFiles.map((ctx, id) =>
+			`import $${id} from "~/commands/${ctx.name}";`
+		)
 			.join("\n")
 	}
     
