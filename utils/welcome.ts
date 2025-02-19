@@ -1,8 +1,6 @@
 import { createCanvas, loadImage } from "@gfx/canvas-wasm";
-import { APIUser } from "@discordjs/core";
-import { avatar } from "~/utils/avatar.ts";
 
-export async function createWelcomeImage(user: APIUser) {
+export async function createWelcomeImage(username: string, avatarUrl: string) {
 	const canvas = createCanvas(1024, 500);
 	const context = canvas.getContext("2d");
 
@@ -15,14 +13,14 @@ export async function createWelcomeImage(user: APIUser) {
 
 	context.font = "80px Kitto";
 	context.fillStyle = "white";
-	context.fillText(`@${user.username}`, 70, 275);
+	context.fillText(`@${username}`, 70, 275);
 
 	context.beginPath();
 	context.arc(816.5, 250, 135, 0, Math.PI * 2, true);
 	context.closePath();
 	context.clip();
 
-	const avatarImage = await loadImage(avatar(user));
+	const avatarImage = await loadImage(avatarUrl);
 	context.drawImage(avatarImage, 679, 112.5, 275, 275);
 
 	const data = await canvas.toBuffer();
