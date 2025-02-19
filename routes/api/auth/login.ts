@@ -18,11 +18,14 @@ export const handler = define.handlers({
 			const guildId = Deno.env.get("GUILD_ID");
 			const redirectUrl = Deno.env.get("REDIRECT_URI");
 
+			console.log("login auth")
+
 			if (!clientId || !clientSecret || !guildId || !redirectUrl) {
 				throw new Error(
 					'Missing "BOT_ID" or "BOT_SECRET" or "GUILD_ID" or "REDIRECT_URI" environment variable.',
 				);
 			} else {
+				console.log("before exchange");
 				const exchanged = await bot.oauth2.tokenExchange({
 					client_id: clientId,
 					client_secret: clientSecret,
@@ -30,6 +33,8 @@ export const handler = define.handlers({
 					grant_type: "authorization_code",
 					redirect_uri: redirectUrl,
 				});
+
+				console.log("after exchange")
 
 				if (!hasRequestedScopes(exchanged.scope)) {
 					throw new HttpError(
